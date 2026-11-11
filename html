@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>छोटे बच्चों का प्यारा खेल</title>
+    <style>
+        body {
+            background-color: #fff0f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff1493;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #555;
+            font-size: 16px;
+        }
+        .score-board {
+            font-size: 20px;
+            color: #4b0082;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .question-box {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 350px;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .target-emoji {
+            font-size: 70px;
+            margin: 10px 0;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        .option-btn {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: 0.2s;
+        }
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+        #message {
+            margin-top: 25px;
+            font-size: 22px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 खेल-खेल में सीखें 🌟</h1>
+    <p>सही नाम पर क्लिक करो!</p>
+    
+    <div class="score-board">स्कोर: <span id="score">0</span></div>
+
+    <div class="question-box">
+        <div class="target-emoji" id="targetEmoji">🍎</div>
+    </div>
+
+    <div class="options-container" id="optionsContainer">
+        <!-- बटन्स यहाँ जावास्क्रिप्ट से आएंगे -->
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const quizData = [
+            { emoji: "🍎", name: "सेब (Apple)" },
+            { emoji: "🍌", name: "केला (Banana)" },
+            { emoji: "🥭", name: "आम (Mango)" },
+            { emoji: "🍇", name: "अंगूर (Grapes)" },
+            { emoji: "🍉", name: "तरबूज" },
+            { emoji: "🍓", name: "स्ट्रॉबेरी" },
+            { emoji: "🐰", name: "खरगोश" },
+            { emoji: "🐱", name: "बिल्ली" },
+            { emoji: "🐶", name: "कुत्ता" },
+            { emoji: "🦋", name: "तितली" }
+        ];
+
+        let score = 0;
+        let currentItem = {};
+
+        function loadQuestion() {
+            document.getElementById("message").innerText = "";
+            
+            // रैंडम सवाल चुनें
+            const randomIndex = Math.floor(Math.random() * quizData.length);
+            currentItem = quizData[randomIndex];
+            
+            document.getElementById("targetEmoji").innerText = currentItem.emoji;
+
+            // 3 गलत और 1 सही विकल्प बनाएं
+            let options = [currentItem.name];
+            while (options.length < 4) {
+                const randomOpt = quizData[Math.floor(Math.random() * quizData.length)].name;
+                if (!options.includes(randomOpt)) {
+                    options.push(randomOpt);
+                }
+            }
+
+            // विकल्पों को शफल करें
+            options.sort(() => Math.random() - 0.5);
+
+            // HTML में बटन रेंडर करें
+            const container = document.getElementById("optionsContainer");
+            container.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const msg = document.getElementById("message");
+            if (selectedOption === currentItem.name) {
+                score += 1;
+                document.getElementById("score").innerText = score;
+                msg.style.color = "green";
+                msg.innerText = "🎉 बहुत बढ़िया! शाबाश!";
+                setTimeout(loadQuestion, 1200);
+            } else {
+                msg.style.color = "red";
+                msg.innerText = "❌ अरे! फिर से कोशिश करो।";
+            }
+        }
+
+        // गेम शुरू करें
+        loadQuestion();
+    </script>
+
+</body>
+</html>
 
